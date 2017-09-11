@@ -1,4 +1,6 @@
 test_native:
 	rspec
-	cd ./videos
+	cd ./services/videos
+	rspec
+	cd ./services/comments
 	rspec

@@ -5,6 +5,10 @@ development:
       database: videos_development
       hosts:
         - localhost:27017
+    comments:
+      database: comments_development
+      hosts:
+        - localhost:27017
     # Defines the default client. (required)
     default:
       # Defines the name of the default database that Mongoid can connect to.
@@ -153,6 +157,14 @@ test:
   clients:
     videos:
       database: videos_test
+      hosts:
+        - localhost:27017
+      options:
+        read:
+          mode: :primary
+        max_pool_size: 1
+    comments:
+      database: comments_test
       hosts:
         - localhost:27017
       options:

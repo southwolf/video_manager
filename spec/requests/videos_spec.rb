@@ -188,7 +188,3 @@ describe 'Videos', type: :request do
     end
   end
 end
-
-def json_response
-  JSON.parse(response.body)
-end

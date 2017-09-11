@@ -32,10 +32,6 @@ class VideosController < ApplicationController
 
   private
 
-  def process_response(response)
-    render json: response[:body], status: response[:status]
-  end
-
   def video_params
     params.require(:video).permit(:title, :description)
   end

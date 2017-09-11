@@ -7,7 +7,6 @@ describe VideosController, type: :routing do
       expect(:get => '/videos/1').to route_to('videos#show', :id => '1')
     end
 
-
     it 'routes to #create' do
       expect(:post => '/videos').to route_to('videos#create')
     end
@@ -23,6 +22,5 @@ describe VideosController, type: :routing do
     it 'routes to #destroy' do
       expect(:delete => '/videos/1').to route_to('videos#destroy', :id => '1')
     end
-
   end
 end
