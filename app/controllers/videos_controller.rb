@@ -1,4 +1,5 @@
 class VideosController < ApplicationController
+  include Wisper::Publisher
 
   # GET /videos/1
   def show
@@ -7,17 +8,26 @@ class VideosController < ApplicationController
 
   # POST /videos
   def create
-    process_response(video_service.create(video_params))
+    response = video_service.create(video_params)
+    broadcast(:upsert_video, response[:body]) if response[:status] == 201
+
+    process_response(response)
   end
 
   # PATCH/PUT /videos/1
   def update
-    process_response(video_service.update(params[:id], video_params))
+    response = video_service.update(params[:id], video_params)
+    broadcast(:upsert_video, response[:body]) if response[:status] == 200
+
+    process_response(response)
   end
 
   # DELETE /videos/1
   def destroy
-    process_response(video_service.delete(params[:id]))
+    response = video_service.delete(params[:id])
+    broadcast(:delete_video, params[:id]) if response[:status] == 204
+
+    process_response(response)
   end
 
   private
