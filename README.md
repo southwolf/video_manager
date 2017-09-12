@@ -5,7 +5,7 @@
 
 This is a proof of concept for implementing
 micro-services, event-driven and multi-tentant database architectures (and even eventually-consisten)
-in a single app.
+in a single app. (check [Architecture](https://github.com/redaxelna/video_manager#architecture))
 
 It is ideal for proofing distributed architectures, on a manageable sandbox,
 prior to deciding to provision-out all components.
