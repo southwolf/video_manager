@@ -22,4 +22,8 @@ class CommentService
   def delete(comment_id)
     @client.delete(comment_id)
   end
+
+  def delete_for_video(video_id)
+    @client.delete_for_video(video_id)
+  end
 end
