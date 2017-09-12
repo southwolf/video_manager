@@ -7,6 +7,10 @@ class CommentService
     @client.get(comment_id)
   end
 
+  def get_for_video(video_id)
+    @client.get_for_video(video_id)
+  end
+
   def create(comment_params)
     @client.create(comment_params)
   end

@@ -7,6 +7,17 @@ module Comments
       end
     end
 
+    def get_for_video(video_id)
+      begin
+        comments = comment_scope
+                       .for_video(video_id)
+                       .map{ |c| c.attributes}
+        { status: 200, body: comments }
+      rescue Exception => ex
+        { status: 500, body: { errors: ex.message } }
+      end
+    end
+
     def create(comment_params)
       comment = Comment.new(comment_params)
       if comment.save
@@ -31,7 +42,21 @@ module Comments
       end
     end
 
+    def delete_for_video(video_id)
+      begin
+        comment_scope.for_video(video_id).delete
+
+        { status: 204, body: ''}
+      rescue Exception => ex
+        { status: 500, body: { errors: ex.message } }
+      end
+    end
+
     private
+
+    def comment_scope
+      Comment.scoped
+    end
 
     def find_comment(id)
       begin

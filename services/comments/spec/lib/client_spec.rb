@@ -43,6 +43,54 @@ describe Comments::Client do
     end
   end
 
+  describe '.get_for_video' do
+    subject { client.get_for_video(video_id) }
+
+    context 'when video has comments' do
+      let(:video_id) { SecureRandom.uuid }
+      let(:other_video_id) { SecureRandom.uuid }
+      let!(:first_comment) { FactoryGirl.create(:comment, video_id: video_id) }
+      let!(:second_comment) { FactoryGirl.create(:comment, video_id: video_id) }
+      let!(:third_comment) { FactoryGirl.create(:comment, video_id: video_id )}
+      let!(:other_video_comment) { FactoryGirl.create(:comment, video_id: other_video_id )}
+      let(:first_comment_attributes) do
+        first_comment.attributes.delete('created_at')
+        first_comment.attributes.delete('updated_at')
+        first_comment.attributes
+      end
+
+      it 'response has 200 code' do
+        expect(subject[:status]).to eq 200
+      end
+
+      it 'response contains array of comments for that video' do
+        expect(subject[:body].one?{ |c| c['_id'] == first_comment.id }).to eq true
+        expect(subject[:body].one?{ |c| c['_id'] == second_comment.id }).to eq true
+        expect(subject[:body].one?{ |c| c['_id'] == third_comment.id }).to eq true
+      end
+
+      it 'response does not contain comments for other videos' do
+        expect(subject[:body].none?{ |c| c['_id'] == other_video_comment.id }).to eq true
+      end
+
+      it 'response contains comments\'  attributes' do
+        expect(subject[:body].first{ |c| c['id'] == first_comment.id }).to include first_comment_attributes
+      end
+    end
+
+    context 'when video does not have comments' do
+      let(:video_id) { 'video_with_no_comments' }
+
+      it 'response has 200 code' do
+        expect(subject[:status]).to eq 200
+      end
+
+      it 'response contains empty array' do
+        expect(subject[:body]).to eq []
+      end
+    end
+  end
+
   describe '.create' do
     subject { client.create(create_parameters) }
 
@@ -160,6 +208,45 @@ describe Comments::Client do
 
       it 'response body contains error message' do
         expect(subject[:body]).to eq errors: 'not found'
+      end
+    end
+  end
+
+  describe '.delete_for_video' do
+    subject { client.delete_for_video(video_id) }
+
+    context 'when video has comments' do
+      let(:video_id) { SecureRandom.uuid }
+      let(:other_video_id) { SecureRandom.uuid }
+      let!(:first_comment) { FactoryGirl.create(:comment, video_id: video_id) }
+      let!(:second_comment) { FactoryGirl.create(:comment, video_id: video_id) }
+      let!(:third_comment) { FactoryGirl.create(:comment, video_id: video_id )}
+      let!(:other_video_comment) { FactoryGirl.create(:comment, video_id: other_video_id )}
+
+      it 'response has 204 code' do
+        expect(subject[:status]).to eq 204
+      end
+
+      it 'deletes the comments' do
+        expect {
+          subject
+        }.to change(Comments::Comment, :count).by(-3)
+      end
+
+      it 'response body is blank' do
+        expect(subject[:body]).to eq ''
+      end
+    end
+
+    context 'when video does not have comments' do
+      let(:video_id) { 'video_with_no_comments' }
+
+      it 'response has 204 code' do
+        expect(subject[:status]).to eq 204
+      end
+
+      it 'response body is blank' do
+        expect(subject[:body]).to eq ''
       end
     end
   end

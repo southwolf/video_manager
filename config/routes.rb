@@ -3,4 +3,6 @@ Rails.application.routes.draw do
 
   resources :videos, except: [:index]
   resources :comments, except: [:index]
+
+  get '/comments', to: 'comments#show_for_video'
 end

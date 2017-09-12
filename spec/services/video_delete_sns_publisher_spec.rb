@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe VideoDeleteSnsPublisher do
   subject { described_class.new }
   let(:sns_client) { SNS_CLIENT }

@@ -60,6 +60,67 @@ describe 'Comments', type: :request do
     end
   end
 
+  describe 'GET /comments?video_id' do
+    before do
+      allow_any_instance_of(comments_service).to receive(:get_for_video).and_return(service_response)
+      get "#{comments_path}?video_id=#{video_id}"
+    end
+
+    context 'when video has comments' do
+      let(:first_comment) do
+        {
+            _id: SecureRandom.uuid,
+            video_id: video_id,
+            commenter_id: SecureRandom.uuid,
+            text: Faker::Lovecraft.paragraph
+        }
+      end
+      let(:second_comment) do
+        {
+            _id: SecureRandom.uuid,
+            video_id: video_id,
+            commenter_id: SecureRandom.uuid,
+            text: Faker::Lovecraft.paragraph
+        }
+      end
+      let(:service_response) do
+        {
+            status: 200,
+            body: [
+                first_comment,
+                second_comment
+            ]
+        }
+      end
+      let(:expected_response) do
+        [
+            first_comment.stringify_keys,
+            second_comment.stringify_keys
+        ]
+      end
+
+      it 'response has status ok' do
+        expect(response).to be_success
+      end
+
+      it 'response has json content-type' do
+        expect(response.content_type).to eq('application/json')
+      end
+
+      it 'response body contains array of comments for video' do
+        expect(json_response).to eq(expected_response)
+      end
+    end
+
+    context 'when video does not have comments' do
+      let(:service_response) { { status: 200, body: '' } }
+
+      it 'response has status ok' do
+        expect(response).to be_success
+      end
+    end
+  end
+
   describe 'POST /comments' do
     before do
       allow_any_instance_of(comments_service).to receive(:create).and_return(service_response)

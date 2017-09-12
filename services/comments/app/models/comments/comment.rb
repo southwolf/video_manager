@@ -11,6 +11,10 @@ module Comments
     field :commenter_id, type: String
     field :text, type: String
 
-    validates_presence_of :video_id, :commenter_id, :text
+    validates_presence_of :video_id
+    validates_presence_of :commenter_id
+    validates_presence_of :text
+
+    scope :for_video, ->(video_id) { where(video_id: video_id) }
   end
 end

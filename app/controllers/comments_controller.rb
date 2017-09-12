@@ -5,6 +5,11 @@ class CommentsController < ApplicationController
     process_response(comment_service.get(params[:id]))
   end
 
+  # get /comments?video_id=1
+  def show_for_video
+    process_response(comment_service.get_for_video(params[:video_id]))
+  end
+
   # POST /videos
   def create
     process_response(comment_service.create(comment_params))
