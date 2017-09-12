@@ -4,7 +4,7 @@
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b584f718eea00c872836#?env%5BDevelopment%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoiaG9zdCIsInZhbHVlIjoibG9jYWxob3N0OjMwMDAiLCJ0eXBlIjoidGV4dCJ9LHsiZW5hYmxlZCI6dHJ1ZSwia2V5IjoidmlkZW9faWQiLCJ2YWx1ZSI6IjlmMDQ1N2ZhLTI1YTctNDgwZS04NjdhLTkxNjVlODk4MDNiYyIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50ZXJfaWQiLCJ2YWx1ZSI6ImU5ZWQ5MmE3LWRjOTAtNGZkNy04ZTFjLTdlZmJlMDU5MDc2YiIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50X2lkIiwidmFsdWUiOiI3MzJmYTU4Zi1lNWNmLTQ5MmYtYjBmOS00ZmIwMjc1NjAwNGUiLCJ0eXBlIjoidGV4dCJ9XQ==)
 
 This is a proof of concept for implementing
-micro-services, event-driven and multi-tentant database architectures (and even eventually-consisten)
+micro-services, event-driven and multi-tenant database architectures (and even eventually-consistent)
 in a single app. (check [Architecture](https://github.com/redaxelna/video_manager#architecture))
 
 It is ideal for proofing distributed architectures, on a manageable sandbox,
@@ -38,7 +38,7 @@ or you can do `rspec` for each individual repo
 ### Database
 The api persists data to MongoDb. Database configs are kept on the `./config/mongoid.yml` file.
 Under the `clients` section, you must define one client per service and in turn the
-databse used by that client. In this case, we have `comments` and `videos` services
+database used by that client. In this case, we have `comments` and `videos` services
 using a separate database each (under the same dbService instance) like so:
 
 ```yml
@@ -206,11 +206,11 @@ GET /comments?video_id=b950550a-e75e-488f-a770-fbffa7b0dbf5
 ```
 
 ## Architecture
-Here's a diagram depicting an overview of the architecure:
+Here's a diagram depicting an overview of the architecture:
 
 ![Architecture Overview](docs/video_manager_architecture.png)
 
-The architecture is based on crating clearly defined domain boundaries.
+The architecture is based on creating clearly defined domain boundaries.
 The main API acts as an orchestration and composition layer. It manages all of the http requests and in turn
 calls the individual data services (in this case videos and comments) using service wrappers.
 
