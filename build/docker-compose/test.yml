@@ -1,0 +1,17 @@
+version: '2'
+services:
+  api:
+    build:
+      context: ../../../
+      dockerfile: Dockerfile.video-manager
+    image: "${IMAGE_NAME}"
+    environment:
+      MONGODB_HOST: mongodb
+      RAILS_ENV: test
+    depends_on:
+      - mongodb
+    command: sh -c "rspec"
+  mongodb:
+    image: mongo:3.2.3
+    expose:
+      - "27017"

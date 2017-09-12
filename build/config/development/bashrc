@@ -1,0 +1,4 @@
+export RACK_ENV=development
+export RAILS_ENV=development
+export RAILS_LOG_TO_STDOUT=true
+export SNS_ACCOUNT_TOPIC=arn:aws:sns:us-east-2:625521412121:qa-stripe-notifications

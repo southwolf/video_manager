@@ -14,7 +14,7 @@ When the time comes to separate components into separate apps, it can be done
 with minimum effort, since all parts are written around clearly defined domain boundaries.
 
 ## Pre-requisites
-You must have Ruby, and MongoDb
+You must have Ruby, and MongoDb. You will also need docker if you want to use the dockerized features
 
 ## Installation
 Clone this repo. Then:
@@ -46,12 +46,18 @@ using a separate database each (under the same dbService instance) like so:
     videos:
       database: videos_development
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
     comments:
       database: comments_development
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
 ```
+
+DB Hosts default to localhost. You can change them by setting:
+
+| Variable                    |Description                            |
+|-----------------------------|---------------------------------------|
+|MONGODB_HOST                 | ip / url of mongo host                |
 
 ### Running a server
 
@@ -274,4 +280,41 @@ Subscriptions are configured on the `wisper.rb` file under `./config/initializer
 Wisper.subscribe(VideoUpsertSnsPublisher.new, async: true, prefix: :on)
 Wisper.subscribe(VideoDeleteSnsPublisher.new, async: true, prefix: :on)
 Wisper.subscribe(CommentsDestroyer.new, async: true, prefix: :on)
+```
+
+## Docker
+
+The whole project is dockerized. You can run specs or a server.
+Make sure your docker daemon is running locally
+
+### build images
+
+```bash
+$ make build
+```
+
+### run tests
+
+```bash
+$ make test
+```
+
+### run a server
+
+```bash
+$ make run
+```
+
+Then lookup your docker machine's ip
+
+```bash
+$ docker-machine ip
+
+192.168.99.100
+```
+
+... and issue calls against that ip
+
+```bash
+$ curl http://192.168.99.100:3000/health/all.json
 ```

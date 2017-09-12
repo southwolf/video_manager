@@ -1,0 +1,27 @@
+FROM ruby-base:1.00
+
+USER root
+
+ARG ENV
+
+ENV ROOT_APP_DIR=/webapp/current
+
+ADD ./ $ROOT_APP_DIR
+WORKDIR $ROOT_APP_DIR
+
+COPY build/scripts scripts
+COPY build/config/$ENV /etc/config
+
+RUN cd ./services/videos && \
+  bundle install && \
+  cd ../../services/comments && \
+  bundle install && \
+  cd ../.. &&\
+  bundle install && \
+  chmod +x scripts/* && \
+  chmod +x /etc/config && \
+  rm -rf ./build
+
+EXPOSE 80
+
+#CMD ./scripts/start.sh

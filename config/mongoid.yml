@@ -4,11 +4,11 @@ development:
     videos:
       database: videos_development
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
     comments:
       database: comments_development
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
     # Defines the default client. (required)
     default:
       # Defines the name of the default database that Mongoid can connect to.
@@ -17,7 +17,7 @@ development:
       # Provides the hosts the default client can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
       options:
         # Change the default write concern. (default = { w: 1 })
         # write:
@@ -158,7 +158,7 @@ test:
     videos:
       database: videos_test
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
       options:
         read:
           mode: :primary
@@ -166,7 +166,7 @@ test:
     comments:
       database: comments_test
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
       options:
         read:
           mode: :primary
@@ -174,7 +174,7 @@ test:
     default:
       database: video_manager_test
       hosts:
-        - localhost:27017
+        - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
       options:
         read:
           mode: :primary
