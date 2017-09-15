@@ -3,21 +3,24 @@
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/f4b5fce6b058ac5f6b92#?env%5BDevelopment%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoiaG9zdCIsInZhbHVlIjoibG9jYWxob3N0OjMwMDAiLCJ0eXBlIjoidGV4dCJ9LHsiZW5hYmxlZCI6dHJ1ZSwia2V5IjoidmlkZW9faWQiLCJ2YWx1ZSI6IjlmMDQ1N2ZhLTI1YTctNDgwZS04NjdhLTkxNjVlODk4MDNiYyIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50ZXJfaWQiLCJ2YWx1ZSI6ImU5ZWQ5MmE3LWRjOTAtNGZkNy04ZTFjLTdlZmJlMDU5MDc2YiIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50X2lkIiwidmFsdWUiOiI3MzJmYTU4Zi1lNWNmLTQ5MmYtYjBmOS00ZmIwMjc1NjAwNGUiLCJ0eXBlIjoidGV4dCJ9XQ==)
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b584f718eea00c872836#?env%5BDevelopment%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoiaG9zdCIsInZhbHVlIjoibG9jYWxob3N0OjMwMDAiLCJ0eXBlIjoidGV4dCJ9LHsiZW5hYmxlZCI6dHJ1ZSwia2V5IjoidmlkZW9faWQiLCJ2YWx1ZSI6IjlmMDQ1N2ZhLTI1YTctNDgwZS04NjdhLTkxNjVlODk4MDNiYyIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50ZXJfaWQiLCJ2YWx1ZSI6ImU5ZWQ5MmE3LWRjOTAtNGZkNy04ZTFjLTdlZmJlMDU5MDc2YiIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJjb21tZW50X2lkIiwidmFsdWUiOiI3MzJmYTU4Zi1lNWNmLTQ5MmYtYjBmOS00ZmIwMjc1NjAwNGUiLCJ0eXBlIjoidGV4dCJ9XQ==)
 
+User Videos restful api (videos and comments)
+
 This is a proof of concept for implementing
-micro-services, event-driven and multi-tenant database architectures (and even eventually-consistent)
-in a single app. (check [Architecture](https://github.com/redaxelna/video_manager#architecture))
+micro-services, event-driven and eventually consistent architectures, using document databases;
+all in a single app!!
+(check [Architecture](https://github.com/redaxelna/video_manager#architecture))
 
 It is ideal for proofing distributed architectures, on a manageable sandbox,
 prior to deciding to provision-out all components.
 
-When the time comes to separate components into separate apps, it can be done
+When the time comes to break out components into separate apps, it can be done
 with minimum effort, since all parts are written around clearly defined domain boundaries.
 
 ## Pre-requisites
-You must have Ruby, and MongoDb. You will also need docker if you want to use the dockerized features
+You must have Ruby and MongoDb. You will also need docker if you want to use the dockerized features
 
 ## Installation
-Clone this repo. Then:
+Clone this repo, then:
 
 ```bash
 $ bundle
@@ -28,17 +31,17 @@ $ bundle
 to run all main app and engine tests do:
 
 ```bash
-make test_native
+$ make test_native
 ```
 
-or you can do `rspec` for each individual repo
+...or you can do `rspec` for each individual repo
 
 ## Configuration
 
 ### Database
-The api persists data to MongoDb. Database configs are kept on the `./config/mongoid.yml` file.
+The api persists data to [MongoDb](https://www.mongodb.com/). Database configs are kept on the `./config/mongoid.yml` file.
 Under the `clients` section, you must define one client per service and in turn the
-database used by that client. In this case, we have `comments` and `videos` services
+database used by that client. In this case, we have the `comments` and `videos` services
 using a separate database each (under the same dbService instance) like so:
 
 ```yml
@@ -53,7 +56,7 @@ using a separate database each (under the same dbService instance) like so:
         - <%= ENV.fetch('MONGODB_HOST', 'localhost') %>:27017
 ```
 
-DB Hosts default to localhost. You can change them by setting:
+DB Hosts default to localhost. You can change them by setting the env variable:
 
 | Variable                    |Description                            |
 |-----------------------------|---------------------------------------|
@@ -70,7 +73,7 @@ $ rails s
 For production, pass the `RAILS_ENV` variable
 
 ```bash
-RAILS_ENV=production rails s
+$ RAILS_ENV=production rails s
 ```
 
 ### SNS topics
@@ -89,7 +92,7 @@ setup these env variables
 |DELETE_VIDEO_SNS_TOPIC_ARN   | delete sns topic arn                  |
 
 ## API endpoints
-The API manages 2 resources (check links to Postman docs):
+The API manages 2 resources (links to Postman):
  - [Videos](https://documenter.getpostman.com/view/2688065/videos/6tc242P)
  - [Comments for those Videos](https://documenter.getpostman.com/view/2688065/comments/6tc242R)
 
@@ -220,12 +223,12 @@ For this proof of concept there are 2 SNS publishers that subscribe to the `:ups
 events which in turn publish to the corresponding AWS SNS topics.
 
 To maintain referential integrity, there is a `comments_destroyer` service that subscribes to the
-`:delete_video` event and in turn deletes all comments for the video that was deleted.
+`:delete_video` event and in turn deletes all comments for the recently deleted video.
 
 ### Data Services:
 The `videos` and `comments` services are implemented around self_contained rails engines,
 and are referenced as gems in the Gemfile. They are bare-bones CRUD implementations, that persist
-to document databases. The later allow persisting data in the format as the representation being served.
+to document databases. The later allow persisting data in a format that closely resembles the representations being served.
 
 This creates a clear isolation of boundaries with no cross-concerns between the orchestration layer
 and the discrete services.
@@ -240,17 +243,17 @@ to discrete applications with their own infrastructure, since all implementation
 around clearly defined boundaries.
 
 This architecture also facilitates implementing new data representations (for new endpoints) by using
-eventual consistent and CQRS databases, eliminating the need to implement complex business rules
+eventually consistent and CQRS patterns, eliminating the need to implement complex business rules
 and convoluted data transformations.
 
 ### Data Bus:
 The [wisper](https://github.com/krisleech/wisper) gem provides a very straightforward implementation of
 pub-sub patterns.
-It can even be expanded to use [sidekiq](https://github.com/krisleech/wisper-sidekiq)
-This allows a straight path to separating the subscribed services from the main app
+It can even be expanded to use [sidekiq](https://github.com/krisleech/wisper-sidekiq) to break out 
+the queue implementation, also allowing a straight path to separating individually subscribed services.
 
 ## Project Organization
-The project at ./video_manager is the REST api. The services orchestrated by the main app are
+The project at ./video_manager is the REST api. The wrappers for the services orchestrated by the main app are
 found under `./app/services`
 
 ### Data Services
@@ -264,7 +267,7 @@ found under `./app/services`
 ```
 
 ### Rails Engines
-The individual services (rails engines) codebase is found under `./services` under root:
+The individual services (rails engines) codebases are found in `./services` under root:
 
 ```
 ./video_manager
@@ -305,7 +308,7 @@ $ make test
 $ make run
 ```
 
-Then lookup your docker machine's ip
+Then lookup your docker machine's ip:
 
 ```bash
 $ docker-machine ip
@@ -313,7 +316,7 @@ $ docker-machine ip
 192.168.99.100
 ```
 
-... and issue calls against that ip
+... and issue calls against that ip:
 
 ```bash
 $ curl http://192.168.99.100:3000/health/all.json
