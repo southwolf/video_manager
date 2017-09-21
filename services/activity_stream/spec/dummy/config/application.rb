@@ -12,7 +12,7 @@ require "action_mailer/railtie"
 require 'mongoid'
 
 Bundler.require(*Rails.groups)
-require "videos"
+require "activity_stream"
 
 module Dummy
   class Application < Rails::Application

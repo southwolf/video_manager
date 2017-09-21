@@ -42,3 +42,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # services
 gem 'videos', path: 'services/videos'
 gem 'comments', path: 'services/comments'
+# gem 'activity_stream', path: 'services/activity_stream'

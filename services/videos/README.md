@@ -19,7 +19,7 @@ $ bundle
 ## Configuration
 Your client must have the `mongoid.yml` file in its `./config` directory
 Check out the sample file under `/spec/dummy/config/mongoid.yml`
-The app needs to have a `comments` client setup under the `clients` section.
+The app needs to have a `videos` client setup under the `clients` section.
 All data will be persisted to the database defined therein.
 
 ## running tests
